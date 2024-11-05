@@ -1,6 +1,8 @@
 package com.jordan.page.projects.cardgamesimulator.model;
 
 import com.jordan.page.projects.cardgamesimulator.enums.Suite;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,7 +20,7 @@ class DeckTests {
     Deck deck;
 
     @BeforeEach
-    void setup(){
+    void setup() {
         deck.reset();
     }
 
@@ -80,8 +82,39 @@ class DeckTests {
     }
 
     @Test
-    void testToString() {
-        System.out.println(deck.toString());
-        assertTrue(true);
+    void testShuffle() {
+        String before = deck.toString();
+        deck.shuffle();
+        String after = deck.toString();
+        assertNotEquals(before, after);
+
+        System.out.println(before);
+        System.out.println("\n\n" + after);
     }
+
+    @Test
+    void testDeal() {
+        Player one = new Player();
+        Player two = new Player();
+        Player three = new Player();
+        Player four = new Player();
+
+        deck.deal(one, two, three, four);
+
+        assertEquals(13, one.getHand().size());
+        assertEquals(13, two.getHand().size());
+        assertEquals(13, three.getHand().size());
+        assertEquals(13, four.getHand().size());
+
+        List<Card> allDealtCards = new ArrayList<>();
+        allDealtCards.addAll(one.getHand());
+        allDealtCards.addAll(two.getHand());
+        allDealtCards.addAll(three.getHand());
+        allDealtCards.addAll(four.getHand());
+
+        assertEquals(52, allDealtCards.size());
+        assertTrue(allDealtCards.containsAll(deck.getCards()));
+        assertTrue(deck.getCards().containsAll(allDealtCards));
+    }
+
 }

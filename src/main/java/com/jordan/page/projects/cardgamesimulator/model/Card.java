@@ -7,8 +7,8 @@ import com.jordan.page.projects.cardgamesimulator.enums.Suite;
 
 public class Card {
     
-    int value;
-    Suite suite;
+    private int value;
+    private Suite suite;
     
     public Card(int value, Suite suite) {
         this.value = value;

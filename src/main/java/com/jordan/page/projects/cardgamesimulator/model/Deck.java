@@ -1,6 +1,7 @@
 package com.jordan.page.projects.cardgamesimulator.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -40,6 +41,15 @@ public class Deck {
         cards.add(new Card(2, Suite.CLUB));
     }
 
+    public void shuffle(){
+
+        if (cards.isEmpty()) {
+            return;
+        }
+
+        Collections.shuffle(cards);
+    }
+
     public List<Card> getCards() {
         return cards;
     }
@@ -50,21 +60,50 @@ public class Deck {
     }
 
     public String toString() {
+
+        if (cards.isEmpty()) {
+            return "";
+        }
+
         StringBuilder sb = new StringBuilder();
         int i = 1;
         for (Card card : cards) {
 
             Suite suite = card.getSuite();
+            int value = card.getValue();
 
             if (suite.equals(Suite.SPADE)) {
-                card.setValue(card.getValue() - 12);
+               value = value - 12;
             }
 
-            sb.append(i + ": " + cardMap.get(card.getValue()) + " of " + card.getSuite()+"S\n");
+            sb.append(i + ": " + cardMap.get(value) + " of " + card.getSuite()+"S\n");
             i++;
         }
 
         return sb.toString();
     }
 
+    public void deal(Player one, Player two, Player three, Player four){
+
+        if (cards.isEmpty()) {
+            return;
+        }
+
+        List<Card> oneHand = new ArrayList<>();
+        List<Card> twoHand = new ArrayList<>();
+        List<Card> threeHand = new ArrayList<>();
+        List<Card> fourHand = new ArrayList<>();
+        
+        List<List<Card>> hands = List.of(oneHand, twoHand, threeHand, fourHand);
+
+        // Distribute cards to players
+        for (int i = 0; i < cards.size(); i++) {
+            hands.get(i % 4).add(cards.get(i));
+        }
+
+        one.setHand(oneHand);
+        two.setHand(twoHand);
+        three.setHand(threeHand);
+        four.setHand(fourHand);
+    }
 }
