@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import com.jordan.page.projects.cardgamesimulator.config.CardMap;
 import com.jordan.page.projects.cardgamesimulator.enums.Suite;
 
 public class Deck {
@@ -13,8 +14,8 @@ public class Deck {
     private List<Card> cards = new ArrayList<>();
 
     // Constructor to pass cardMap as a parameter
-    public Deck(Map<Integer, String> cardMap) {
-        this.cardMap = cardMap;
+    public Deck() {
+        this.cardMap = CardMap.getInstance();
         load();
     }
 

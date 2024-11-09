@@ -14,6 +14,8 @@ public class Turn {
     private Player currentWinner;
     private Suite priority;
 
+    public Turn(){}
+
     public void playCard(Player player, int cardIndex) {
         Card card = player.playCard(cardIndex);
         if (card != null) {
@@ -40,4 +42,46 @@ public class Turn {
         // Logic to determine the winning player based on the priority suite and card values
         return null; // Placeholder return
     }
+
+    public List<Map<Player, Card>> getPreviousTurns() {
+        return previousTurns;
+    }
+
+    public void setPreviousTurns(List<Map<Player, Card>> previousTurns) {
+        this.previousTurns = previousTurns;
+    }
+
+    public Map<Player, Card> getCurrentTurn() {
+        return currentTurn;
+    }
+
+    public void setCurrentTurn(Map<Player, Card> currentTurn) {
+        this.currentTurn = currentTurn;
+    }
+
+    public Player getPreviousWinner() {
+        return previousWinner;
+    }
+
+    public void setPreviousWinner(Player previousWinner) {
+        this.previousWinner = previousWinner;
+    }
+
+    public Player getCurrentWinner() {
+        return currentWinner;
+    }
+
+    public void setCurrentWinner(Player currentWinner) {
+        this.currentWinner = currentWinner;
+    }
+
+    public Suite getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Suite priority) {
+        this.priority = priority;
+    }
+
+    
 }

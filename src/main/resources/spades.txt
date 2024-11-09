@@ -19,7 +19,7 @@ Components:
 			J -> 17 (only 1 in deck)
 			
 		- enum Suite (clubs, hearts, diamonds, spades)
-			clubs -> 13 cards
+			clubs -> 13 cards								
 			hearts -> 12 cards (remove 2 of hearts)
 			diamonds -> 12 cards (remove 2 of diamonds)
 			spades -> 15 cards
@@ -45,12 +45,12 @@ Components:
 		- List<Cards> 4 total
 		- enum prioritySuite -> The suite of the first card inserted into the turn.
 		- Player winner -> Will also be the first to go on the next turn.
-		- int count
-			Max is 13
+
 		- determineWinner() -> determine the winning player based on the four cards. 
 		- increment the Team score of the winning player. 
 		- Going to require a priority system to determine the winner of each turn.
-		
+	6. Game
+		- Manages the Spades game. 
 		
 	Diamonds -> 3,4,5,6,7,8,9,10,J,Q,K,A -> 3,4,5,6,7,8,9,10,11,12,13,14
 	Hearts -> 3,4,5,6,7,8,9,10,J,Q,K,A -> 3,4,5,6,7,8,9,10,11,12,13,14

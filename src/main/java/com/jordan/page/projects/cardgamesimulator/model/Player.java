@@ -2,13 +2,22 @@ package com.jordan.page.projects.cardgamesimulator.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import com.jordan.page.projects.cardgamesimulator.config.CardMap;
+import com.jordan.page.projects.cardgamesimulator.enums.Suite;
 
 public class Player {
     
-    private List<Card> hand = new ArrayList<>();
-    int score = 0;
+    private Map<Integer, String> cardMap;
+    private List<Card> hand;
+    int score;
 
-    public Player() {}
+    public Player() {
+         this.score = 0;
+         this.hand = new ArrayList<>();
+         cardMap = CardMap.getInstance();
+    }
 
     public List<Card> getHand() {
         return hand;
@@ -32,5 +41,30 @@ public class Player {
         }
         return null; 
     }
+
+     public String toString() {
+
+        if (hand.isEmpty()) {
+            return "";
+        }
+
+        StringBuilder sb = new StringBuilder();
+        int i = 1;
+        for (Card card : hand) {
+
+            Suite suite = card.getSuite();
+            int value = card.getValue();
+
+            if (suite.equals(Suite.SPADE)) {
+               value = value - 12;
+            }
+
+            sb.append(i + ": " + cardMap.get(value) + " of " + card.getSuite()+"S\n");
+            i++;
+        }
+
+        return sb.toString();
+    }
+
     
 }

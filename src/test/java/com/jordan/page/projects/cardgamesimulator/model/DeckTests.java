@@ -16,12 +16,11 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class DeckTests {
 
-    @Autowired
     Deck deck;
 
     @BeforeEach
     void setup() {
-        deck.reset();
+        deck = new Deck();
     }
 
     @Test
@@ -99,6 +98,7 @@ class DeckTests {
         Player three = new Player();
         Player four = new Player();
 
+        deck.shuffle();
         deck.deal(one, two, three, four);
 
         assertEquals(13, one.getHand().size());
@@ -115,6 +115,8 @@ class DeckTests {
         assertEquals(52, allDealtCards.size());
         assertTrue(allDealtCards.containsAll(deck.getCards()));
         assertTrue(deck.getCards().containsAll(allDealtCards));
+
+        System.out.println("Player One: \n" + one.toString());
     }
 
 }
