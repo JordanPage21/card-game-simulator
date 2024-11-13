@@ -101,7 +101,7 @@ class TurnTests {
     }
 
     @Test
-    void testCalculateWinner_MiddleCardPlayer() {
+    void testCalculateWinner_MiddleCardPlayer_NormalSuitePlay() {
 
         Card p1 = new Card(12, Suite.HEART);
         Card p2 = new Card(2, Suite.HEART);
