@@ -39,8 +39,7 @@ public class Turn {
 
     private Player calculateWinner() {
 
-        // exit if currentTurn is empty
-        if (currentTurn.size() == 0) {
+        if (currentTurn.size() != 4) {
             return null;
         }
 
