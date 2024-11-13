@@ -4,24 +4,23 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.jordan.page.projects.cardgamesimulator.enums.Suite;
 
 public class Turn {
-    private List<Map<Player,Card>> previousTurns = new ArrayList<>();
-    private Map<Player, Card> currentTurn = new HashMap<>();
+    private List<Map<Card, Player>> previousTurns = new ArrayList<>();
+    private Map<Card, Player> currentTurn = new HashMap<>();
     private Player previousWinner;
     private Player currentWinner;
     private Suite priority;
 
-    public Turn(){}
-
     public void playCard(Player player, int cardIndex) {
         Card card = player.playCard(cardIndex);
         if (card != null) {
-            currentTurn.put(player, card); // Store the card with the player
+            currentTurn.put(card, player); // Store the card with the player
 
-            // Set priority if this is the first card played
+            // Set priority if this is the first crad played
             if (currentTurn.size() == 1) {
                 priority = card.getSuite();
             }
@@ -33,29 +32,51 @@ public class Turn {
         if (currentWinner != null) {
             currentWinner.incrementScore(); // Increment winner's score
         }
-        Map<Player, Card> previousTurnMap = new HashMap<>(currentTurn); 
-        previousTurns.add(previousTurnMap); //save the previous turn 
+        Map<Card, Player> previousTurnMap = new HashMap<>(currentTurn);
+        previousTurns.add(previousTurnMap); // save the previous turn
         currentTurn.clear(); // Clear current turn for the next round
     }
 
     private Player calculateWinner() {
-        // Logic to determine the winning player based on the priority suite and card values
-        return null; // Placeholder return
+
+        // exit if currentTurn is empty
+        if (currentTurn.size() == 0) {
+            return null;
+        }
+
+        // initialize winningCard
+        Card winningCard = new Card(0, Suite.CLUB);
+
+        for (Entry<Card, Player> entry : currentTurn.entrySet()) {
+
+            Card card = entry.getKey();
+            Suite suite = card.getSuite();
+
+            // If card is a priority suite or a spade and if the cards value is greater than
+            // the current winning card.
+            if ((suite == priority || suite == Suite.SPADE) && card.getValue() > winningCard.getValue()) {
+
+                winningCard = card;
+
+            }
+        }
+
+        return currentTurn.get(winningCard); // return the entry for the winning card
     }
 
-    public List<Map<Player, Card>> getPreviousTurns() {
+    public List<Map<Card, Player>> getPreviousTurns() {
         return previousTurns;
     }
 
-    public void setPreviousTurns(List<Map<Player, Card>> previousTurns) {
+    public void setPreviousTurns(List<Map<Card, Player>> previousTurns) {
         this.previousTurns = previousTurns;
     }
 
-    public Map<Player, Card> getCurrentTurn() {
+    public Map<Card, Player> getCurrentTurn() {
         return currentTurn;
     }
 
-    public void setCurrentTurn(Map<Player, Card> currentTurn) {
+    public void setCurrentTurn(Map<Card, Player> currentTurn) {
         this.currentTurn = currentTurn;
     }
 
@@ -83,5 +104,4 @@ public class Turn {
         this.priority = priority;
     }
 
-    
 }
