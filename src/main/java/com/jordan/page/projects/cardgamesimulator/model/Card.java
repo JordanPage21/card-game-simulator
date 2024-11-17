@@ -35,11 +35,13 @@ public class Card {
 
     public String toString() {
 
+        int tempValue = this.value;
+
         if (suite.equals(Suite.SPADE)) {
-            value = value - 12;
+            tempValue = tempValue - 12;
         }
 
-        return cardMap.get(value) + " of " + this.suite.name() + "S\n";
+        return cardMap.get(tempValue) + " of " + this.suite.name() + "S\n";
     }
 
 }

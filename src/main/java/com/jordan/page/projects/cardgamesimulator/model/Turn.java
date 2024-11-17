@@ -5,25 +5,65 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import com.jordan.page.projects.cardgamesimulator.enums.Suite;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class Turn {
-    private List<Map<Card, Player>> previousTurns = new ArrayList<>();
-    private Map<Card, Player> currentTurn = new HashMap<>();
+    private List<Map<Card, Player>> previousTurns;
+    private Map<Card, Player> currentTurn;
     private Player previousWinner;
     private Player currentWinner;
     private Suite priority;
+    private boolean priorityCheck;
+
+    public Turn(boolean priorityCheck) {
+        previousTurns = new ArrayList<>();
+        currentTurn = new HashMap<>();
+        this.priorityCheck = priorityCheck;
+    }
 
     public void playCard(Player player, int cardIndex) {
-        Card card = player.playCard(cardIndex);
-        if (card != null) {
-            currentTurn.put(card, player); // Store the card with the player
 
-            // Set priority if this is the first crad played
-            if (currentTurn.size() == 1) {
+        if (currentTurn.size() > 3) {
+            log.error("Each player has already made a move this turn. {}", currentTurn.toString());
+        }
+
+        Card card = player.getCard(cardIndex);
+
+        if (card != null) {
+
+            // Set priority if this is the first card played
+            if (currentTurn.size() == 0 && priorityCheck) {
+
+                log.info("Priority set to {}", card.getSuite());
                 priority = card.getSuite();
+
+                // if the card is not the priority then we need to check if the player's hand
+                // contains a priority suite card
+            } else if (card.getSuite() != priority && priorityCheck) {
+
+                log.info("Cut attempted, determining if a valid cut.");
+                boolean containsPriorityCard = player.getHand().stream().anyMatch(c -> c.getSuite() == priority);
+
+                if (containsPriorityCard) {
+                    log.error(
+                            "Player attempted to play a card that is not the priority, but they contains a priority suite card! Attempt to play another card.");
+
+                    return;
+                }
+
             }
+
+            // if here, play card as normal
+            player.playCard(cardIndex);
+            currentTurn.put(card, player);
+
+            log.info("Player successfully played card. {}", card.toString());
+
         }
     }
 
@@ -53,13 +93,20 @@ public class Turn {
 
             // If card is a priority suite or a spade and if the cards value is greater than
             // the current winning card.
-            if ((suite == priority || suite == Suite.SPADE) && card.getValue() > winningCard.getValue()) {
+            if ((suite == priority || suite == Suite.SPADE) && card.getValue() > winningCard.getValue()
+                    && priorityCheck) {
 
                 winningCard = card;
 
             }
+
+            // non priority case
+            else if (card.getValue() > winningCard.getValue() && !priorityCheck) {
+                winningCard = card;
+            }
         }
 
+        log.info("Out of current turn \n{}\nThe winning card is {}", toString(), winningCard);
         return currentTurn.get(winningCard); // return the entry for the winning card
     }
 
@@ -101,6 +148,17 @@ public class Turn {
 
     public void setPriority(Suite priority) {
         this.priority = priority;
+    }
+
+    public String toString(){
+
+        StringBuilder sb = new StringBuilder();
+
+        for(Card card: currentTurn.keySet()){
+            sb.append(card.toString());
+        }
+
+        return sb.toString();
     }
 
 }

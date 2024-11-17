@@ -42,6 +42,10 @@ public class Player {
         return null; 
     }
 
+    public Card getCard(int index) {
+        return hand.get(index);
+    }
+
      public String toString() {
 
         if (hand.isEmpty()) {
