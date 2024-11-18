@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,12 +35,12 @@ class PlayerTests {
 
         int originalSize = player.getHand().size();
 
-        //out of bounds
-        assertNull(player.playCard(-1));
-        assertNull(player.playCard(hand.size()));
+        // out of bounds
+        assertThrows(IndexOutOfBoundsException.class, () -> player.playCard(-1));
+        assertThrows(IndexOutOfBoundsException.class, () -> player.playCard(originalSize));
         assertEquals(originalSize, player.getHand().size());
 
-        //in bounds
+        // in bounds
         assertNotNull(player.playCard(hand.size() - 1));
         assertNotNull(player.playCard(0));
         assertNotEquals(originalSize, player.getHand().size());

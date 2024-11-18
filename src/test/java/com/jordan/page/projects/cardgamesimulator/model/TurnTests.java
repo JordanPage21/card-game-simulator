@@ -31,14 +31,14 @@ class TurnTests {
 
     @BeforeEach
     void setup() {
-        player1 = new Player();
-        player2 = new Player();
-        player3 = new Player();
-        player4 = new Player();
+        player1 = new Player("Jordan");
+        player2 = new Player("Joshua");
+        player3 = new Player("Brenda");
+        player4 = new Player("Vashon");
 
         deck = new Deck();
         deck.shuffle();
-        deck.deal(player1, player2, player3, player4);
+        deck.deal(List.of(player1, player2, player3, player4));
 
     }
 
@@ -162,8 +162,6 @@ class TurnTests {
         turn.playCard(player2, 2);
         turn.playCard(player3, 4);
         turn.playCard(player4, 6);
-
-        System.out.println(player4Card.getValue());
 
         // assert the correct player and cards are mapped in the current turn
         assertEquals(player1, turn.getCurrentTurn().get(player1Card));

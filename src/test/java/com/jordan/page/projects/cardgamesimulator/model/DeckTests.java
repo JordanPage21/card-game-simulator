@@ -25,6 +25,7 @@ class DeckTests {
     @Test
     void testLoadTotalSize() {
         assertEquals(52, deck.getCards().size());
+        System.out.println(deck.toString());
     }
 
     @Test
@@ -98,7 +99,7 @@ class DeckTests {
         Player four = new Player();
 
         deck.shuffle();
-        deck.deal(one, two, three, four);
+        deck.deal(List.of(one, two, three, four));
 
         assertEquals(13, one.getHand().size());
         assertEquals(13, two.getHand().size());

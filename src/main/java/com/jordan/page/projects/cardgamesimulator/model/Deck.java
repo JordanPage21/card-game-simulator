@@ -3,27 +3,23 @@ package com.jordan.page.projects.cardgamesimulator.model;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
-import com.jordan.page.projects.cardgamesimulator.config.CardMap;
 import com.jordan.page.projects.cardgamesimulator.enums.Suite;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class Deck {
 
-    private final Map<Integer, String> cardMap;
-    private List<Card> cards = new ArrayList<>();
+    private List<Card> cards;
 
-    // Constructor to pass cardMap as a parameter
     public Deck() {
-        this.cardMap = CardMap.getInstance();
         load();
     }
 
     public void load() {
 
-        if (!cards.isEmpty()) {
-            return;
-        }
+        cards = new ArrayList<>();
 
         for (Suite suite : Suite.values()) {
 
@@ -45,14 +41,15 @@ public class Deck {
     public void shuffle(){
 
         if (cards.isEmpty()) {
-            return;
+            log.warn("Deck is empty, reloading...");
+            load();
         }
 
         Collections.shuffle(cards);
     }
 
     public List<Card> getCards() {
-        return cards;
+        return Collections.unmodifiableList(cards);
     }
 
     public void reset() {
@@ -63,48 +60,42 @@ public class Deck {
     public String toString() {
 
         if (cards.isEmpty()) {
-            return "";
+            return "Deck is empty";
         }
 
         StringBuilder sb = new StringBuilder();
         int i = 1;
         for (Card card : cards) {
-
-            Suite suite = card.getSuite();
-            int value = card.getValue();
-
-            if (suite.equals(Suite.SPADE)) {
-               value = value - 12;
-            }
-
-            sb.append(i + ": " + cardMap.get(value) + " of " + card.getSuite()+"S\n");
+            sb.append(i).append(": ").append(card.getDisplayValue()).append("\n");
             i++;
         }
 
         return sb.toString();
     }
 
-    public void deal(Player one, Player two, Player three, Player four){
-
-        if (cards.isEmpty()) {
-            return;
-        }
-
-        List<Card> oneHand = new ArrayList<>();
-        List<Card> twoHand = new ArrayList<>();
-        List<Card> threeHand = new ArrayList<>();
-        List<Card> fourHand = new ArrayList<>();
+    public void deal(List<Player> players) {
         
-        List<List<Card>> hands = List.of(oneHand, twoHand, threeHand, fourHand);
-
-        // Distribute cards to players
-        for (int i = 0; i < cards.size(); i++) {
-            hands.get(i % 4).add(cards.get(i));
+        if (cards.isEmpty()) {
+            log.warn("Deck is empty, loading and shuffling deck...");
+            load();
+            shuffle();
         }
-
-        one.setHand(oneHand);
-        two.setHand(twoHand);
-        three.setHand(threeHand);
-        four.setHand(fourHand);
+    
+        int playerCount = players.size();
+        if (playerCount == 0) {
+            throw new IllegalArgumentException("No players to deal to!");
+        }
+    
+        List<ArrayList<Card>> hands = players.stream()
+                                        .map(player -> new ArrayList<Card>())
+                                        .toList();
+    
+        for (int i = 0; i < cards.size(); i++) {
+            hands.get(i % playerCount).add(cards.get(i));
+        }
+    
+        for (int i = 0; i < players.size(); i++) {
+            players.get(i).setHand(hands.get(i));
+        }
     }
 }
